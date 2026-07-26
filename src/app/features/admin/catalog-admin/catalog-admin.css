@@ -1,0 +1,39 @@
+.catalog-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.catalog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.w-full {
+  width: 100%;
+}

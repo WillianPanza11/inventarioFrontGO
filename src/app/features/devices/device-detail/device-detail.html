@@ -1,0 +1,103 @@
+<div class="device-detail-page">
+  <a routerLink="/devices" class="back-link"><i class="pi pi-arrow-left"></i> Volver al listado</a>
+
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (device(); as d) {
+    <div class="detail-grid">
+      <p-card header="Datos del equipo" styleClass="detail-card">
+        <div class="detail-header">
+          <h2>{{ d.androidId }}</h2>
+          <div class="badges">
+            <p-tag [value]="d.online ? 'Online' : 'Offline'" [severity]="d.online ? 'success' : 'secondary'" />
+            <p-tag
+              [value]="d.fueraDeSitio ? 'Fuera de sitio' : 'En sitio'"
+              [severity]="d.fueraDeSitio ? 'danger' : 'success'"
+            />
+          </div>
+        </div>
+
+        <dl class="detail-fields">
+          <div>
+            <dt>Modelo</dt>
+            <dd>{{ d.model }} ({{ d.manufacturer }})</dd>
+          </div>
+          <div>
+            <dt>Android</dt>
+            <dd>{{ d.androidVersion }}</dd>
+          </div>
+          <div>
+            <dt>App</dt>
+            <dd>{{ d.appVersion }}</dd>
+          </div>
+          <div>
+            <dt>IP</dt>
+            <dd>{{ d.ip }}</dd>
+          </div>
+          <div>
+            <dt>MAC</dt>
+            <dd>{{ d.mac }}</dd>
+          </div>
+          <div>
+            <dt>SSID</dt>
+            <dd>{{ d.ssid }}</dd>
+          </div>
+          <div>
+            <dt>Batería</dt>
+            <dd>{{ d.battery }}%</dd>
+          </div>
+          <div>
+            <dt>Responsable</dt>
+            <dd>{{ d.responsable }}</dd>
+          </div>
+          <div>
+            <dt>Local asignado</dt>
+            <dd>{{ d.localAsignadoNombre }}</dd>
+          </div>
+          <div>
+            <dt>Local detectado</dt>
+            <dd>{{ d.localDetectado }}</dd>
+          </div>
+          <div>
+            <dt>Sección</dt>
+            <dd>{{ d.seccionNombre }}</dd>
+          </div>
+          <div>
+            <dt>Última vez visto</dt>
+            <dd>{{ d.lastSeen | date: 'medium' }}</dd>
+          </div>
+          <div>
+            <dt>Registrado</dt>
+            <dd>{{ d.createdAt | date: 'medium' }}</dd>
+          </div>
+        </dl>
+
+        @if (authService.isAdmin()) {
+          <p-button label="Editar asignación" icon="pi pi-pencil" (onClick)="editar()" />
+        }
+      </p-card>
+
+      <p-card header="Historial de movimientos" styleClass="detail-card">
+        @if (movimientos().length === 0) {
+          <p class="empty-state">Sin movimientos registrados.</p>
+        } @else {
+          <p-timeline [value]="movimientos()" align="left">
+            <ng-template #content let-mov>
+              <p class="mov-date">{{ mov.fecha | date: 'medium' }}</p>
+              <p class="mov-route">{{ mov.localOrigen ?? 'Desconocido' }} → {{ mov.localDestino ?? 'Desconocido' }}</p>
+            </ng-template>
+          </p-timeline>
+        }
+      </p-card>
+
+      @if (authService.isAdmin()) {
+        <p-card styleClass="detail-card apps-kiosko-card">
+          <app-apps-kiosko [androidId]="androidId" />
+        </p-card>
+      }
+    </div>
+
+    <app-asignacion-dialog [(visible)]="dialogVisible" [device]="device()" (saved)="onSaved()" />
+    <p-confirmDialog />
+  }
+</div>

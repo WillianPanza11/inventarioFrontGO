@@ -1,0 +1,90 @@
+.device-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--p-text-muted-color, #64748b);
+  text-decoration: none;
+  font-size: 0.9rem;
+  width: fit-content;
+}
+
+.back-link:hover {
+  color: var(--p-primary-color, #10b981);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.detail-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+}
+
+.detail-fields dt {
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.detail-fields dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--p-text-color, #1e293b);
+}
+
+.mov-date {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.mov-route {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  color: var(--p-text-color, #1e293b);
+}
+
+.empty-state {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.apps-kiosko-card {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

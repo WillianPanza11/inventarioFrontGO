@@ -1,0 +1,36 @@
+<div class="alerts-page">
+  <div class="alerts-header">
+    <h2>Dispositivos fuera de sitio</h2>
+    <p-button icon="pi pi-refresh" label="Actualizar" [text]="true" (onClick)="reload()" />
+  </div>
+
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (devices().length === 0) {
+    <p-card>
+      <p class="empty-ok"><i class="pi pi-check-circle"></i> No hay dispositivos fuera de sitio.</p>
+    </p-card>
+  } @else {
+    <p-table [value]="devices()" [paginator]="true" [rows]="10" dataKey="androidId" styleClass="alerts-table">
+      <ng-template #header>
+        <tr>
+          <th>ID</th>
+          <th>Responsable</th>
+          <th>Debería estar en</th>
+          <th>Está en</th>
+          <th>Última vez visto</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-device>
+        <tr class="alert-row">
+          <td [title]="device.androidId">{{ shortId(device.androidId) }}</td>
+          <td>{{ device.responsable }}</td>
+          <td>{{ device.localAsignadoNombre }}</td>
+          <td><p-tag [value]="device.localDetectado" severity="danger" /></td>
+          <td>{{ device.lastSeen | date: 'medium' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>

@@ -1,0 +1,45 @@
+.mapping-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mapping-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.mapping-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.w-full {
+  width: 100%;
+}

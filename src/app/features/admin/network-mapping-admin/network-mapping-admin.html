@@ -1,0 +1,83 @@
+<div class="mapping-admin">
+  <div class="mapping-header">
+    <p-button label="Nueva regla" icon="pi pi-plus" (onClick)="nuevo()" />
+  </div>
+
+  <p-table [value]="mappings()" [loading]="loading()" [paginator]="true" [rows]="10" dataKey="id">
+    <ng-template #header>
+      <tr>
+        <th>Subnet</th>
+        <th>SSID</th>
+        <th>Local</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-mapping>
+      <tr>
+        <td>{{ mapping.subnet || '—' }}</td>
+        <td>{{ mapping.ssid || '—' }}</td>
+        <td>{{ mapping.localNombre }}</td>
+        <td>
+          <p-tag
+            [value]="mapping.activo !== false ? 'Activo' : 'Inactivo'"
+            [severity]="mapping.activo !== false ? 'success' : 'secondary'"
+          />
+        </td>
+        <td class="row-actions">
+          <p-button icon="pi pi-pencil" [text]="true" (onClick)="editar(mapping)" />
+          <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="eliminar(mapping)" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="5">No hay reglas de mapeo configuradas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    [style]="{ width: '420px' }"
+    [header]="editingId() != null ? 'Editar regla de mapeo' : 'Nueva regla de mapeo'"
+  >
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="mapping-form">
+      <div class="field">
+        <label for="subnet">Subnet (primeros 3 octetos)</label>
+        <input id="subnet" type="text" pInputText formControlName="subnet" placeholder="192.168.1" class="w-full" />
+      </div>
+
+      <div class="field">
+        <label for="ssid">SSID</label>
+        <input id="ssid" type="text" pInputText formControlName="ssid" placeholder="WIFI-CORP" class="w-full" />
+      </div>
+
+      <div class="field">
+        <label for="local">Local</label>
+        <p-select
+          inputId="local"
+          formControlName="localId"
+          [options]="locales()"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Selecciona un local"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <div class="checkbox-field">
+        <p-checkbox formControlName="activo" [binary]="true" inputId="activo" />
+        <label for="activo">Regla activa</label>
+      </div>
+
+      <div class="dialog-actions">
+        <p-button label="Cancelar" severity="secondary" [text]="true" type="button" (onClick)="cancelar()" />
+        <p-button label="Guardar" type="submit" [loading]="saving()" />
+      </div>
+    </form>
+  </p-dialog>
+</div>

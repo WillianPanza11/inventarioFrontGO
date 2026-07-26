@@ -1,0 +1,28 @@
+.asignacion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.device-id {
+  margin: 0;
+  color: var(--p-text-muted-color, #64748b);
+  font-size: 0.85rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.w-full {
+  width: 100%;
+}

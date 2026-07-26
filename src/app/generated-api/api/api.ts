@@ -1,0 +1,11 @@
+export * from './autenticacin.service';
+import { AutenticacinService } from './autenticacin.service';
+export * from './dispositivos.service';
+import { DispositivosService } from './dispositivos.service';
+export * from './locales.service';
+import { LocalesService } from './locales.service';
+export * from './mapeoDeRed.service';
+import { MapeoDeRedService } from './mapeoDeRed.service';
+export * from './secciones.service';
+import { SeccionesService } from './secciones.service';
+export const APIS = [AutenticacinService, DispositivosService, LocalesService, MapeoDeRedService, SeccionesService];

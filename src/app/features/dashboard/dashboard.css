@@ -1,0 +1,142 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.summary-content {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.summary-icon {
+  font-size: 1.6rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-icon.neutral {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.summary-icon.online {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.summary-icon.offline {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.summary-icon.danger {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--p-text-color, #1e293b);
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--p-text-color, #1e293b);
+}
+
+.local-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.local-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.local-name {
+  font-weight: 600;
+  color: var(--p-text-color, #1e293b);
+}
+
+.stacked-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f1f5f9;
+  margin-bottom: 0.65rem;
+}
+
+.bar-segment.online {
+  background: #10b981;
+}
+
+.bar-segment.offline {
+  background: #94a3b8;
+}
+
+.local-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.count.online i {
+  color: #10b981;
+  font-size: 0.55rem;
+}
+
+.count.offline i {
+  color: #94a3b8;
+  font-size: 0.55rem;
+}
+
+.empty-state {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+@media (max-width: 900px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}

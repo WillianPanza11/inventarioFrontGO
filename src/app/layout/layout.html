@@ -1,0 +1,34 @@
+<p-toast />
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <i class="pi pi-mobile"></i>
+      <span>Inventario HH</span>
+    </div>
+
+    <nav class="nav">
+      @for (item of navItems; track item.path) {
+        @if (!item.adminOnly || authService.isAdmin()) {
+          <a [routerLink]="item.path" routerLinkActive="active" class="nav-item">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      }
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="spacer"></span>
+      <span class="user-info">{{ authService.session()?.username }}</span>
+      <p-tag [value]="authService.getRol() ?? ''" [severity]="authService.isAdmin() ? 'warn' : 'secondary'" />
+      <p-button icon="pi pi-sign-out" label="Salir" [text]="true" (onClick)="logout()" />
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '420px' }" header="Editar asignación" (onHide)="cancel()">
+  @if (device(); as d) {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="asignacion-form">
+      <p class="device-id">
+        Equipo: <strong>{{ d.androidId }}</strong>
+      </p>
+
+      <div class="field">
+        <label for="local">Local asignado</label>
+        <p-select
+          inputId="local"
+          formControlName="localAsignadoId"
+          [options]="locales()"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Selecciona un local"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <div class="field">
+        <label for="seccion">Sección</label>
+        <p-select
+          inputId="seccion"
+          formControlName="seccionId"
+          [options]="secciones()"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Selecciona una sección"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <div class="field">
+        <label for="responsable">Responsable</label>
+        <input id="responsable" type="text" pInputText formControlName="responsable" class="w-full" />
+      </div>
+
+      <div class="dialog-actions">
+        <p-button label="Cancelar" severity="secondary" [text]="true" type="button" (onClick)="cancel()" />
+        <p-button label="Guardar" type="submit" [loading]="saving()" />
+      </div>
+    </form>
+  }
+</p-dialog>

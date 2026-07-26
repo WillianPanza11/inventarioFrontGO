@@ -1,0 +1,115 @@
+<div class="device-list-page">
+  <div class="filters">
+    <p-iconfield>
+      <p-inputicon class="pi pi-search" />
+      <input
+        pInputText
+        type="text"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+        placeholder="Buscar por ID, IP o responsable"
+      />
+    </p-iconfield>
+
+    <p-select
+      [ngModel]="onlineFilter()"
+      (ngModelChange)="setOnlineFilter($event)"
+      [options]="onlineOptions"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '160px' }"
+    />
+
+    <p-select
+      [ngModel]="localFilter()"
+      (ngModelChange)="setLocalFilter($event)"
+      [options]="localOptions()"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Todos los locales"
+      [showClear]="true"
+      [style]="{ width: '200px' }"
+    />
+
+    <div class="checkbox-field">
+      <p-checkbox
+        [ngModel]="soloFueraDeSitio()"
+        (ngModelChange)="setSoloFueraDeSitio($event)"
+        [binary]="true"
+        inputId="fueraDeSitio"
+      />
+      <label for="fueraDeSitio">Solo fuera de sitio</label>
+    </div>
+  </div>
+
+  <p-table
+    [value]="filteredDevices()"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    dataKey="androidId"
+    [rowHover]="true"
+    styleClass="device-table"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="androidId">ID <p-sortIcon field="androidId" /></th>
+        <th pSortableColumn="model">Modelo <p-sortIcon field="model" /></th>
+        <th>IP</th>
+        <th>MAC</th>
+        <th pSortableColumn="responsable">Responsable <p-sortIcon field="responsable" /></th>
+        <th pSortableColumn="localAsignadoNombre">Local asignado <p-sortIcon field="localAsignadoNombre" /></th>
+        <th>Local detectado</th>
+        <th pSortableColumn="seccionNombre">Sección <p-sortIcon field="seccionNombre" /></th>
+        <th>Batería</th>
+        <th>Estado</th>
+        <th>Sitio</th>
+        <th pSortableColumn="lastSeen">Última vez <p-sortIcon field="lastSeen" /></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-device>
+      <tr>
+        <td [title]="device.androidId">{{ shortId(device.androidId) }}</td>
+        <td>{{ device.model }}</td>
+        <td>{{ device.ip }}</td>
+        <td>{{ device.mac }}</td>
+        <td>{{ device.responsable }}</td>
+        <td>{{ device.localAsignadoNombre }}</td>
+        <td>{{ device.localDetectado }}</td>
+        <td>{{ device.seccionNombre }}</td>
+        <td>{{ device.battery }}%</td>
+        <td>
+          <p-tag [value]="device.online ? 'Online' : 'Offline'" [severity]="device.online ? 'success' : 'secondary'" />
+        </td>
+        <td>
+          <p-tag
+            [value]="device.fueraDeSitio ? 'Fuera de sitio' : 'En sitio'"
+            [severity]="device.fueraDeSitio ? 'danger' : 'success'"
+          />
+        </td>
+        <td>{{ device.lastSeen | date: 'short' }}</td>
+        <td class="row-actions">
+          <p-button icon="pi pi-eye" [text]="true" [routerLink]="['/devices', device.androidId]" />
+          @if (authService.isAdmin()) {
+            <p-button icon="pi pi-pencil" [text]="true" (onClick)="editar(device)" />
+          }
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="12">No hay dispositivos que coincidan con los filtros.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-asignacion-dialog
+    [(visible)]="dialogVisible"
+    [device]="selectedDevice()"
+    (saved)="onSaved()"
+  />
+</div>

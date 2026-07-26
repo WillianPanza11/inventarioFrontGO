@@ -1,0 +1,51 @@
+<div class="apps-kiosko">
+  <div class="apps-kiosko-header">
+    <div>
+      <h3>Apps permitidas en modo kiosco</h3>
+      <p class="subtitle">
+        Las apps se detectan automáticamente del equipo. Todo lo que no esté activado queda bloqueado en el
+        terminal.
+      </p>
+    </div>
+    <p-button
+      label="Guardar cambios"
+      icon="pi pi-save"
+      [disabled]="!hasPendingChanges()"
+      [loading]="saving()"
+      (onClick)="guardar()"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="apps-list">
+      @for (i of [1, 2, 3]; track i) {
+        <p-skeleton height="3.5rem" />
+      }
+    </div>
+  } @else if (apps().length === 0) {
+    <p class="empty-state">
+      Esperando datos del equipo (se reciben cuando el handheld reporta sus apps).
+    </p>
+  } @else {
+    <div class="apps-list">
+      @for (app of apps(); track app.packageName) {
+        <div class="app-row" [class.app-row-uninstalled]="app.instalada === false">
+          <div class="app-icon">
+            <i class="pi pi-mobile"></i>
+          </div>
+          <div class="app-info">
+            <span class="app-name">{{ app.nombreApp }}</span>
+            <span class="app-package">{{ app.packageName }}</span>
+          </div>
+          @if (app.instalada === false) {
+            <p-tag value="No instalada" severity="warn" />
+          }
+          @if (app.esInventario) {
+            <p-tag value="Requerida" icon="pi pi-lock" severity="secondary" />
+          }
+          <p-toggleswitch [ngModel]="app.permitida" [disabled]="app.esInventario" (onChange)="toggle(app)" />
+        </div>
+      }
+    </div>
+  }
+</div>

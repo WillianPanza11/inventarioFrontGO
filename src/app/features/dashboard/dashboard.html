@@ -1,0 +1,79 @@
+<div class="dashboard">
+  <section class="summary-cards">
+    <p-card styleClass="summary-card">
+      <div class="summary-content">
+        <i class="pi pi-mobile summary-icon neutral"></i>
+        <div>
+          <span class="summary-value">{{ totals().total }}</span>
+          <span class="summary-label">Total dispositivos</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card">
+      <div class="summary-content">
+        <i class="pi pi-check-circle summary-icon online"></i>
+        <div>
+          <span class="summary-value">{{ totals().online }}</span>
+          <span class="summary-label">Online</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card">
+      <div class="summary-content">
+        <i class="pi pi-power-off summary-icon offline"></i>
+        <div>
+          <span class="summary-value">{{ totals().offline }}</span>
+          <span class="summary-label">Offline</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card">
+      <div class="summary-content">
+        <i class="pi pi-exclamation-triangle summary-icon danger"></i>
+        <div>
+          <span class="summary-value">{{ totals().fueraDeSitio }}</span>
+          <span class="summary-label">Fuera de sitio</span>
+        </div>
+      </div>
+    </p-card>
+  </section>
+
+  <h2 class="section-title">Inventario por local</h2>
+
+  @if (loading()) {
+    <div class="local-grid">
+      @for (i of [1, 2, 3]; track i) {
+        <p-skeleton height="9rem" />
+      }
+    </div>
+  } @else if (localStats().length === 0) {
+    <p class="empty-state">No hay locales registrados.</p>
+  } @else {
+    <div class="local-grid">
+      @for (stat of localStats(); track stat.localId) {
+        <p-card styleClass="local-card">
+          <div class="local-header">
+            <span class="local-name">{{ stat.nombre }}</span>
+            @if (stat.fueraDeSitio > 0) {
+              <p-tag severity="danger" value="{{ stat.fueraDeSitio }} fuera de sitio" />
+            }
+          </div>
+
+          <div class="stacked-bar">
+            <div class="bar-segment online" [style.width.%]="onlinePct(stat)"></div>
+            <div class="bar-segment offline" [style.width.%]="offlinePct(stat)"></div>
+          </div>
+
+          <div class="local-counts">
+            <span class="count online"><i class="pi pi-circle-fill"></i> {{ stat.online }} online</span>
+            <span class="count offline"><i class="pi pi-circle-fill"></i> {{ stat.offline }} offline</span>
+            <span class="count total">{{ stat.total }} equipos</span>
+          </div>
+        </p-card>
+      }
+    </div>
+  }
+</div>
