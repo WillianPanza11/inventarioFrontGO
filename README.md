@@ -1,59 +1,55 @@
 # Inventhhfront
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.30.
+Panel web (Angular 20 + PrimeNG) para el sistema de inventario y monitoreo de Rugged Handheld Terminals. Consume el backend Spring Boot vía un cliente TypeScript autogenerado a partir de su OpenAPI.
 
-## Development server
+## Requisitos
 
-To start a local development server, run:
+- Node.js compatible con Angular 20 (ver `package.json` / `@angular/cli`).
+- El backend Spring Boot corriendo (por defecto en `http://localhost:8080`, con `/v3/api-docs` y `/swagger-ui.html`).
 
-```bash
-ng serve
-```
+## Levantar el frontend apuntando al backend local
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+1. Instalar dependencias: `npm install`.
+2. Verificar que `src/environments/environment.development.ts` tenga `apiBaseUrl` apuntando al backend (por defecto ya es `http://localhost:8080`).
+3. Arrancar el dev server:
 
-## Code scaffolding
+   ```bash
+   npm start
+   ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+   Esto corre `ng serve` con la configuración `development` (que usa `environment.development.ts` vía `fileReplacements` en `angular.json`). Abrir `http://localhost:4200`.
+4. Iniciar sesión en `/login` con un usuario válido del backend (rol `ADMIN` o `VISOR`).
 
-```bash
-ng generate component component-name
-```
+Para producción, editar `src/environments/environment.ts` (`apiBaseUrl`) con la IP fija o el DNS interno del servidor on-premise antes de correr `npm run build`.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Regenerar el cliente de la API (`src/app/generated-api/`)
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Ese directorio **no se edita a mano**: lo genera `swagger-codegen-cli.jar` (ya incluido en `src/app/swagger-codegen-cli.jar`) a partir del OpenAPI del backend. Si el backend cambia (nuevos endpoints, DTOs, etc.), con el backend corriendo en local:
 
 ```bash
-ng build
+java -jar src/app/swagger-codegen-cli.jar generate \
+  -i http://localhost:8080/v3/api-docs \
+  -l typescript-angular \
+  -o src/app/generated-api
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Después de regenerar:
 
-## Running unit tests
+- Revisar si swagger-codegen volvió a deduplicar nombres de método entre tags (p. ej. `listar`, `listar1`, `listar2`, `listar3` — ver el mapeo real en cada `*.service.ts`), ya que pueden cambiar de un endpoint a otro entre regeneraciones.
+- Los campos de los DTOs suelen salir tipados `any` (limitación del generador con este spec); los componentes ya hacen `as` hacia las interfaces generadas en el punto de uso en vez de tipar a mano.
+- `ApiModule`/`ApiModule.forRoot(...)` que trae el generador no se usa (es un `NgModule` clásico); los servicios se registran directamente como providers en `app.config.ts` junto con `BASE_PATH`.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Comandos
 
 ```bash
-ng test
+npm start          # ng serve (development)
+npm run build       # build de producción
+npm run watch       # build en watch mode (development)
+npm test            # unit tests (Karma + Jasmine)
+npm run serve:ssr:inventhhfront   # corre el servidor SSR ya compilado (dist/)
 ```
 
-## Running end-to-end tests
+## Más información
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ver [CLAUDE.md](CLAUDE.md) para la arquitectura del proyecto (zoneless + SSR, estructura de `generated-api/`, etc.). Para referencia general de Angular CLI: [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
+# inventarioFrontGO
