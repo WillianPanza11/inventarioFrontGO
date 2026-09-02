@@ -1,0 +1,96 @@
+.local-detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page-header {
+  display: flex;
+}
+
+.local-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.local-title h2 {
+  margin: 0;
+  color: var(--p-text-color, #1e293b);
+}
+
+.local-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.local-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.count.online i {
+  color: #10b981;
+  font-size: 0.55rem;
+}
+
+.count.offline i {
+  color: #94a3b8;
+  font-size: 0.55rem;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--p-text-color, #1e293b);
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-state {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+:host ::ng-deep .clickable-row {
+  cursor: pointer;
+}
+
+:host ::ng-deep .skeleton-spaced {
+  margin-top: 1.25rem;
+}
+
+:host ::ng-deep .devices-table td i {
+  margin-right: 0.35rem;
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .devices-table .pi-clock {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+:host ::ng-deep .devices-table .battery-high {
+  color: #10b981;
+}
+
+:host ::ng-deep .devices-table .battery-mid {
+  color: #f59e0b;
+}
+
+:host ::ng-deep .devices-table .battery-low {
+  color: #ef4444;
+}

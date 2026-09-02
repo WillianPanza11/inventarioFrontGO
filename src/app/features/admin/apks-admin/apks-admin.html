@@ -1,0 +1,218 @@
+<p-confirmDialog />
+
+<div class="apks-admin">
+  <div class="apks-header">
+    <p class="apks-hint">
+      <strong>Interno:</strong> subís el archivo .apk, lo aloja este servidor (checksum y tamaño se calculan solos).
+      <strong>Externo:</strong> registrás la URL de un .apk ya alojado en otro servidor (ej. gerardoortiz.com).
+    </p>
+    <div class="apks-actions">
+      <p-button label="Subir APK interno" icon="pi pi-upload" (onClick)="nuevoInterno()" />
+      <p-button
+        label="Registrar APK externo"
+        icon="pi pi-link"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="nuevoExterno()"
+      />
+    </div>
+  </div>
+
+  <p-table [value]="apks()" [loading]="loading()" [paginator]="true" [rows]="10" dataKey="id" [rowHover]="true">
+    <ng-template #header>
+      <tr>
+        <th>Nombre</th>
+        <th>Package</th>
+        <th>Versión</th>
+        <th>Tamaño</th>
+        <th>Origen</th>
+        <th>Checksum</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-apk>
+      <tr>
+        <td>{{ apk.nombre }}</td>
+        <td class="mono">{{ apk.packageName }}</td>
+        <td>
+          {{ apk.versionName || '—' }}
+          @if (apk.versionCode) {
+            <span class="version-code">(code {{ apk.versionCode }})</span>
+          }
+        </td>
+        <td>{{ apk.tamanoBytes | formatBytes }}</td>
+        <td>
+          <p-tag
+            [value]="apk.origen === 'INTERNO' ? 'Interno' : 'Externo'"
+            [severity]="apk.origen === 'INTERNO' ? 'info' : 'secondary'"
+          />
+        </td>
+        <td class="mono checksum-cell">
+          @if (apk.checksum) {
+            <span [pTooltip]="apk.checksum" tooltipPosition="top">{{ shortChecksum(apk.checksum) }}</span>
+            <p-button
+              icon="pi pi-copy"
+              [text]="true"
+              size="small"
+              (onClick)="copiarChecksum(apk.checksum)"
+              pTooltip="Copiar checksum"
+            />
+          } @else {
+            <span class="empty-state">Sin checksum</span>
+          }
+        </td>
+        <td>
+          <p-tag
+            [value]="apk.activo !== false ? 'Activo' : 'Inactivo'"
+            [severity]="apk.activo !== false ? 'success' : 'secondary'"
+          />
+        </td>
+        <td class="row-actions">
+          <a
+            [href]="apk.urlDescarga"
+            target="_blank"
+            rel="noopener"
+            pTooltip="Ver / verificar URL"
+            class="download-link"
+          >
+            <i class="pi pi-external-link" aria-hidden="true"></i>
+          </a>
+          <p-button icon="pi pi-pencil" [text]="true" (onClick)="editar(apk)" />
+          <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="eliminar(apk)" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="8">No hay APKs registrados.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Diálogo: subir APK interno -->
+  <p-dialog
+    [(visible)]="uploadDialogVisible"
+    [modal]="true"
+    [style]="{ width: '460px' }"
+    [closable]="!uploading()"
+    header="Subir APK interno"
+  >
+    <form [formGroup]="uploadForm" (ngSubmit)="subirInterno()" class="apk-form">
+      <p class="apks-hint">
+        Package name, versión y version code se extraen automáticamente del archivo; no hace falta escribirlos.
+      </p>
+
+      <div class="field">
+        <label for="upload-nombre">Nombre (opcional)</label>
+        <input
+          id="upload-nombre"
+          type="text"
+          pInputText
+          formControlName="nombre"
+          placeholder="Si lo dejás vacío, se usa el label del APK"
+          class="w-full"
+        />
+      </div>
+
+      <div class="field">
+        <label>Archivo .apk</label>
+        <p-fileupload
+          mode="basic"
+          accept=".apk"
+          chooseLabel="Elegir archivo"
+          [auto]="false"
+          [disabled]="uploading()"
+          (onSelect)="onFileSelected($event)"
+          (onClear)="onFileRemoved()"
+        />
+        @if (selectedFile(); as file) {
+          <p class="selected-file">{{ file.name }} ({{ file.size | formatBytes }})</p>
+        }
+      </div>
+
+      @if (uploading()) {
+        <p-progressbar [value]="uploadProgress()" />
+      }
+
+      <div class="dialog-actions">
+        <p-button
+          label="Cancelar"
+          severity="secondary"
+          [text]="true"
+          type="button"
+          [disabled]="uploading()"
+          (onClick)="cancelarUpload()"
+        />
+        <p-button label="Subir" type="submit" [loading]="uploading()" />
+      </div>
+    </form>
+  </p-dialog>
+
+  <!-- Diálogo: registrar externo / editar -->
+  <p-dialog
+    [(visible)]="externalDialogVisible"
+    [modal]="true"
+    [style]="{ width: '460px' }"
+    [header]="editingId() != null ? 'Editar APK' : 'Registrar APK externo'"
+  >
+    <form [formGroup]="externalForm" (ngSubmit)="guardarExterno()" class="apk-form">
+      @if (editingId() == null) {
+        <p class="apks-hint">Para APKs alojados en otro servidor. El checksum debe corresponder al archivo de esa URL, o la app rechazará la instalación.</p>
+      }
+
+      <div class="field">
+        <label for="ext-nombre">Nombre</label>
+        <input id="ext-nombre" type="text" pInputText formControlName="nombre" class="w-full" />
+      </div>
+
+      <div class="field">
+        <label for="ext-package">Package name</label>
+        <input
+          id="ext-package"
+          type="text"
+          pInputText
+          formControlName="packageName"
+          placeholder="com.ejemplo.app"
+          class="w-full"
+        />
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="ext-version-name">Versión</label>
+          <input id="ext-version-name" type="text" pInputText formControlName="versionName" class="w-full" />
+        </div>
+        <div class="field">
+          <label for="ext-version-code">Version code</label>
+          <input id="ext-version-code" type="number" pInputText formControlName="versionCode" class="w-full" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ext-url">URL de descarga</label>
+        <input
+          id="ext-url"
+          type="text"
+          pInputText
+          formControlName="urlDescarga"
+          placeholder="https://..."
+          class="w-full"
+        />
+        <small class="field-help">Se recomienda HTTPS.</small>
+      </div>
+
+      <div class="field">
+        <label for="ext-checksum">Checksum (SHA-256)</label>
+        <input id="ext-checksum" type="text" pInputText formControlName="checksum" class="w-full mono" />
+      </div>
+
+      <div class="dialog-actions">
+        <p-button label="Cancelar" severity="secondary" [text]="true" type="button" (onClick)="cancelarExterno()" />
+        <p-button label="Guardar" type="submit" [loading]="saving()" />
+      </div>
+    </form>
+  </p-dialog>
+</div>

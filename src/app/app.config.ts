@@ -11,11 +11,15 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
 import { environment } from '../environments/environment';
 import {
+  APKsService,
   AutenticacinService,
   DispositivosService,
   LocalesService,
   SeccionesService,
   MapeoDeRedService,
+  ProvinciasService,
+  RdenesService,
+  TiposDeLocalService,
   BASE_PATH,
 } from './generated-api';
 
@@ -34,10 +38,14 @@ export const appConfig: ApplicationConfig = {
     }),
     { provide: BASE_PATH, useValue: environment.apiBaseUrl },
     MessageService,
+    APKsService,
     AutenticacinService,
     DispositivosService,
     LocalesService,
     SeccionesService,
     MapeoDeRedService,
+    ProvinciasService,
+    RdenesService,
+    TiposDeLocalService,
   ],
 };

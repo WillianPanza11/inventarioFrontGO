@@ -10,8 +10,8 @@ import {
   AsignacionDTO,
   DeviceResponseDTO,
   DispositivosService,
-  Local,
   LocalesService,
+  LocalResponseDTO,
   Seccion,
   SeccionesService,
 } from '../../../generated-api';
@@ -34,7 +34,7 @@ export class AsignacionDialog {
   readonly saved = output<void>();
 
   protected readonly saving = signal(false);
-  protected readonly locales = signal<Local[]>([]);
+  protected readonly locales = signal<LocalResponseDTO[]>([]);
   protected readonly secciones = signal<Seccion[]>([]);
   private catalogsLoaded = false;
 
@@ -99,10 +99,10 @@ export class AsignacionDialog {
 
   private loadCatalogs(): void {
     forkJoin({
-      locales: this.localesService.listar2(),
-      secciones: this.seccionesService.listar(),
+      locales: this.localesService.listar5(),
+      secciones: this.seccionesService.listar1(),
     }).subscribe(({ locales, secciones }) => {
-      this.locales.set((locales as Local[]) ?? []);
+      this.locales.set((locales as LocalResponseDTO[]) ?? []);
       this.secciones.set((secciones as Seccion[]) ?? []);
     });
   }

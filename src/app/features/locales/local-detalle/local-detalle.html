@@ -1,0 +1,81 @@
+<div class="local-detalle">
+  <div class="page-header">
+    <p-button label="Volver al dashboard" icon="pi pi-arrow-left" [text]="true" routerLink="/dashboard" />
+  </div>
+
+  @if (loading()) {
+    <p-skeleton height="6rem" />
+    <p-skeleton height="16rem" styleClass="skeleton-spaced" />
+  } @else if (error()) {
+    <p class="empty-state">No se pudo cargar la información del local. Intentá nuevamente.</p>
+  } @else if (!local()) {
+    <p class="empty-state">No se encontró el local solicitado.</p>
+  } @else {
+    <p-card styleClass="local-header-card">
+      <div class="local-title">
+        <h2>{{ local()!.nombre }}</h2>
+        <div class="local-tags">
+          <p-tag [value]="local()!.tipoLocalNombre || 'Sin clasificar'" severity="info" />
+          <p-tag [value]="local()!.provinciaNombre || 'Sin provincia'" severity="secondary" />
+        </div>
+      </div>
+
+      <div class="local-summary">
+        <span class="count total">{{ totals().total }} equipos</span>
+        <span class="count online"><i class="pi pi-circle-fill"></i> {{ totals().online }} online</span>
+        <span class="count offline"><i class="pi pi-circle-fill"></i> {{ totals().offline }} offline</span>
+      </div>
+    </p-card>
+
+    <h3 class="section-title">Handhelds</h3>
+
+    <p-table
+      [value]="devices()"
+      [paginator]="true"
+      [rows]="10"
+      dataKey="androidId"
+      [rowHover]="true"
+      styleClass="devices-table"
+    >
+      <ng-template #header>
+        <tr>
+          <th>ID</th>
+          <th>Estado</th>
+          <th>Batería</th>
+          <th>Sección</th>
+          <th>Última vez</th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-device>
+        <tr class="clickable-row" (click)="verDispositivo(device)">
+          <td [title]="device.androidId">{{ shortId(device.androidId) }}</td>
+          <td>
+            <p-tag
+              [value]="device.online ? 'Online' : 'Offline'"
+              [severity]="device.online ? 'success' : 'secondary'"
+            />
+          </td>
+          <td><i [class]="batteryIcon(device.battery)" aria-hidden="true"></i> {{ device.battery }}%</td>
+          <td>{{ device.seccionNombre }}</td>
+          <td><i class="pi pi-clock" aria-hidden="true"></i> {{ device.lastSeen | date: 'short' }}</td>
+          <td class="row-actions">
+            <p-button
+              icon="pi pi-eye"
+              [text]="true"
+              [routerLink]="['/devices', device.androidId]"
+              (click)="$event.stopPropagation()"
+            />
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="6">Este local no tiene equipos registrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>

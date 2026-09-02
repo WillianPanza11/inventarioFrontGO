@@ -17,7 +17,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
-import { Local } from '../model/local';
+import { LocalRequestDTO } from '../model/localRequestDTO';
+import { LocalResponseDTO } from '../model/localResponseDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -56,24 +57,24 @@ export class LocalesService {
 
 
     /**
-     * Actualiza un local (solo ADMIN)
+     * Actualiza un local, incluida su clasificación de tipo/provincia (solo ADMIN)
      * 
      * @param body 
      * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public actualizar2(body: Local, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public actualizar2(body: Local, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public actualizar2(body: Local, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public actualizar2(body: Local, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public actualizar4(body: LocalRequestDTO, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public actualizar4(body: LocalRequestDTO, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public actualizar4(body: LocalRequestDTO, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public actualizar4(body: LocalRequestDTO, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling actualizar2.');
+            throw new Error('Required parameter body was null or undefined when calling actualizar4.');
         }
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling actualizar2.');
+            throw new Error('Required parameter id was null or undefined when calling actualizar4.');
         }
 
         let headers = this.defaultHeaders;
@@ -121,13 +122,13 @@ export class LocalesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public crear2(body: Local, observe?: 'body', reportProgress?: boolean): Observable<Local>;
-    public crear2(body: Local, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Local>>;
-    public crear2(body: Local, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Local>>;
-    public crear2(body: Local, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public crear5(body: LocalRequestDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public crear5(body: LocalRequestDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public crear5(body: LocalRequestDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public crear5(body: LocalRequestDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling crear2.');
+            throw new Error('Required parameter body was null or undefined when calling crear5.');
         }
 
         let headers = this.defaultHeaders;
@@ -157,7 +158,7 @@ export class LocalesService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.request<Local>('post',`${this.basePath}/api/locales`,
+        return this.httpClient.request<any>('post',`${this.basePath}/api/locales`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,
@@ -175,13 +176,13 @@ export class LocalesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public eliminar2(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public eliminar2(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public eliminar2(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public eliminar2(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public eliminar4(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public eliminar4(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public eliminar4(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public eliminar4(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling eliminar2.');
+            throw new Error('Required parameter id was null or undefined when calling eliminar4.');
         }
 
         let headers = this.defaultHeaders;
@@ -217,14 +218,14 @@ export class LocalesService {
 
     /**
      * Lista los locales activos
-     * Accesible con JWT (panel) o con X-API-Key (app, para poblar la lista desplegable del setup inicial).
+     * Accesible con JWT (panel) o con X-API-Key (app, para poblar la lista desplegable del setup inicial). Incluye tipo y provincia ya resueltos.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listar2(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public listar2(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public listar2(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public listar2(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public listar5(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public listar5(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public listar5(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public listar5(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 

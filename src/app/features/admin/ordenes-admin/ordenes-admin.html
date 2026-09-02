@@ -1,0 +1,214 @@
+<p-confirmDialog />
+
+<div class="ordenes-admin">
+  <div class="ordenes-header">
+    <p class="ordenes-hint">Instalá un APK en uno o varios equipos, o en todos los de un local.</p>
+    <p-button label="Nueva orden" icon="pi pi-send" (onClick)="nuevaOrden()" />
+  </div>
+
+  <div class="ordenes-filters">
+    <p-select
+      [ngModel]="filtroEstado()"
+      (ngModelChange)="setFiltroEstado($event)"
+      [options]="estadoFiltroOptions"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '180px' }"
+    />
+    <p-select
+      [ngModel]="filtroAndroidId()"
+      (ngModelChange)="setFiltroAndroidId($event)"
+      [options]="deviceOptions()"
+      optionLabel="label"
+      optionValue="value"
+      filter="true"
+      placeholder="Todos los equipos"
+      [showClear]="true"
+      [style]="{ width: '260px' }"
+    />
+    <p-button icon="pi pi-refresh" label="Refrescar" severity="secondary" [text]="true" (onClick)="refrescar()" />
+    <div class="auto-refresh-field">
+      <p-checkbox
+        [ngModel]="autoRefresh()"
+        (ngModelChange)="setAutoRefresh($event)"
+        [binary]="true"
+        inputId="auto-refresh"
+      />
+      <label for="auto-refresh">Auto-refrescar (8s)</label>
+    </div>
+  </div>
+
+  @if (loteResumen(); as resumen) {
+    <div class="lote-resumen">
+      <span class="lote-resumen-title">Último lote ({{ resumen.total }} órdenes):</span>
+      <p-tag value="{{ resumen.pendientes }} pendientes" severity="secondary" />
+      <p-tag value="{{ resumen.enviadas }} enviadas" severity="info" />
+      <p-tag value="{{ resumen.enProgreso }} en progreso" severity="warn" />
+      <p-tag value="{{ resumen.completadas }} completadas" severity="success" />
+      <p-tag value="{{ resumen.fallidas }} fallidas" severity="danger" />
+      <p-button icon="pi pi-times" [text]="true" size="small" (onClick)="cerrarResumenLote()" />
+    </div>
+  }
+
+  <p-table [value]="ordenes()" [loading]="loading()" [paginator]="true" [rows]="15" dataKey="id" [rowHover]="true">
+    <ng-template #header>
+      <tr>
+        <th>APK</th>
+        <th>Equipo</th>
+        <th>Estado</th>
+        <th>Creada</th>
+        <th>Finalizada</th>
+        <th>Resultado</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-orden>
+      <tr class="clickable-row" (click)="verDetalle(orden)">
+        <td>{{ apkLabelForOrden(orden) }}</td>
+        <td [title]="orden.androidId">{{ shortId(orden.androidId) }}</td>
+        <td><p-tag [value]="orden.estado" [severity]="estadoSeverity(orden.estado)" /></td>
+        <td>{{ orden.fechaCreada | date: 'short' }}</td>
+        <td>{{ orden.fechaFinal ? (orden.fechaFinal | date: 'short') : '—' }}</td>
+        <td class="resultado-cell" [pTooltip]="orden.resultado" tooltipPosition="top">
+          {{ orden.resultado || '—' }}
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">No hay órdenes registradas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog [(visible)]="detalleVisible" [modal]="true" [style]="{ width: '520px' }" header="Detalle de la orden">
+    @if (ordenSeleccionada(); as orden) {
+      <dl class="detalle-fields">
+        <div>
+          <dt>Equipo</dt>
+          <dd>{{ orden.androidId }}</dd>
+        </div>
+        <div>
+          <dt>Tipo</dt>
+          <dd>{{ orden.tipo }}</dd>
+        </div>
+        <div>
+          <dt>Estado</dt>
+          <dd><p-tag [value]="orden.estado" [severity]="estadoSeverity(orden.estado)" /></dd>
+        </div>
+        <div>
+          <dt>Creada por</dt>
+          <dd>{{ orden.creadaPor || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Fecha creada</dt>
+          <dd>{{ orden.fechaCreada | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>Fecha enviada</dt>
+          <dd>{{ orden.fechaEnviada ? (orden.fechaEnviada | date: 'medium') : '—' }}</dd>
+        </div>
+        <div>
+          <dt>Fecha final</dt>
+          <dd>{{ orden.fechaFinal ? (orden.fechaFinal | date: 'medium') : '—' }}</dd>
+        </div>
+        <div class="full-width">
+          <dt>Resultado</dt>
+          <dd>{{ orden.resultado || '—' }}</dd>
+        </div>
+        <div class="full-width">
+          <dt>Payload</dt>
+          <dd><pre class="payload-pre">{{ payloadJson(orden) }}</pre></dd>
+        </div>
+      </dl>
+      <div class="dialog-actions">
+        <p-button label="Cerrar" severity="secondary" [text]="true" (onClick)="cerrarDetalle()" />
+      </div>
+    }
+  </p-dialog>
+
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '480px' }" header="Nueva orden de instalación">
+    <form [formGroup]="form" (ngSubmit)="confirmarOrden()" class="orden-form">
+      <div class="field">
+        <label for="orden-apk">APK a instalar</label>
+        <p-select
+          inputId="orden-apk"
+          formControlName="apkId"
+          [options]="apkOptions()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccioná un APK"
+          [style]="{ width: '100%' }"
+          appendTo="body"
+        />
+      </div>
+
+      <div class="field">
+        <label>Destino</label>
+        <p-selectButton
+          [options]="destinoModeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [allowEmpty]="false"
+          [ngModel]="destinoMode()"
+          [ngModelOptions]="{ standalone: true }"
+          (onChange)="setDestinoMode($event.value)"
+        />
+      </div>
+
+      @if (destinoMode() === 'uno') {
+        <div class="field">
+          <label for="orden-android-id">Equipo</label>
+          <p-select
+            inputId="orden-android-id"
+            formControlName="androidId"
+            [options]="deviceOptions()"
+            optionLabel="label"
+            optionValue="value"
+            filter="true"
+            placeholder="Seleccioná un equipo"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+          />
+        </div>
+      } @else if (destinoMode() === 'varios') {
+        <div class="field">
+          <label for="orden-android-ids">Equipos</label>
+          <p-multiselect
+            inputId="orden-android-ids"
+            formControlName="androidIds"
+            [options]="deviceOptions()"
+            optionLabel="label"
+            optionValue="value"
+            filter="true"
+            display="chip"
+            placeholder="Seleccioná equipos"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+          />
+        </div>
+      } @else {
+        <div class="field">
+          <label for="orden-local">Local</label>
+          <p-select
+            inputId="orden-local"
+            formControlName="localId"
+            [options]="localOptions()"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccioná un local"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+          />
+          <small class="field-help">Se instalará en todos los equipos actualmente asignados a ese local.</small>
+        </div>
+      }
+
+      <div class="dialog-actions">
+        <p-button label="Cancelar" severity="secondary" [text]="true" type="button" (onClick)="cancelar()" />
+        <p-button label="Continuar" type="submit" [loading]="saving()" />
+      </div>
+    </form>
+  </p-dialog>
+</div>

@@ -31,4 +31,8 @@ export interface HeartbeatResponseDTO {
      * Packages a aplicar al kiosko (setLockTaskPackages): las apps activadas para este equipo más siempre la app de inventario. Se recalcula en cada heartbeat, así que un cambio hecho en el panel llega al equipo en el siguiente latido.
      */
     appsPermitidas?: any;
+    /**
+     * Órdenes PENDIENTE de este equipo, entregadas en este heartbeat y marcadas ENVIADA. El equipo debe ejecutar cada una y reportar el resultado a POST /api/devices/{androidId}/ordenes/{ordenId}/resultado.
+     */
+    ordenesPendientes?: any;
 }

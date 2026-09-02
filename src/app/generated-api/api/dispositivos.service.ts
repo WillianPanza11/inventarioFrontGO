@@ -22,8 +22,10 @@ import { AsignacionDTO } from '../model/asignacionDTO';
 import { DeviceResponseDTO } from '../model/deviceResponseDTO';
 import { HeartbeatDTO } from '../model/heartbeatDTO';
 import { HeartbeatResponseDTO } from '../model/heartbeatResponseDTO';
+import { OrdenResponseDTO } from '../model/ordenResponseDTO';
 import { RegistroInicialDTO } from '../model/registroInicialDTO';
 import { RegistroResponseDTO } from '../model/registroResponseDTO';
+import { ReportarResultadoOrdenDTO } from '../model/reportarResultadoOrdenDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -291,10 +293,10 @@ export class DispositivosService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listar3(online?: any, fueraDeSitio?: any, local?: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public listar3(online?: any, fueraDeSitio?: any, local?: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public listar3(online?: any, fueraDeSitio?: any, local?: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public listar3(online?: any, fueraDeSitio?: any, local?: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public listar7(online?: any, fueraDeSitio?: any, local?: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public listar7(online?: any, fueraDeSitio?: any, local?: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public listar7(online?: any, fueraDeSitio?: any, local?: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public listar7(online?: any, fueraDeSitio?: any, local?: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
 
@@ -451,13 +453,13 @@ export class DispositivosService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public obtener(androidId: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public obtener(androidId: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public obtener(androidId: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public obtener(androidId: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public obtener1(androidId: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public obtener1(androidId: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public obtener1(androidId: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public obtener1(androidId: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (androidId === null || androidId === undefined) {
-            throw new Error('Required parameter androidId was null or undefined when calling obtener.');
+            throw new Error('Required parameter androidId was null or undefined when calling obtener1.');
         }
 
         let headers = this.defaultHeaders;
@@ -591,6 +593,68 @@ export class DispositivosService {
         }
 
         return this.httpClient.request<any>('post',`${this.basePath}/api/devices/${encodeURIComponent(String(androidId))}/apps-instaladas`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Reporta el resultado final de una orden ejecutada
+     * Llamado por la app tras ejecutar una orden entregada en el heartbeat. estado debe ser COMPLETADA o FALLIDA; actualiza estado, resultado y fecha_final.
+     * @param body 
+     * @param androidId 
+     * @param ordenId 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public reportarResultadoOrden(body: ReportarResultadoOrdenDTO, androidId: any, ordenId: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public reportarResultadoOrden(body: ReportarResultadoOrdenDTO, androidId: any, ordenId: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public reportarResultadoOrden(body: ReportarResultadoOrdenDTO, androidId: any, ordenId: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public reportarResultadoOrden(body: ReportarResultadoOrdenDTO, androidId: any, ordenId: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling reportarResultadoOrden.');
+        }
+
+        if (androidId === null || androidId === undefined) {
+            throw new Error('Required parameter androidId was null or undefined when calling reportarResultadoOrden.');
+        }
+
+        if (ordenId === null || ordenId === undefined) {
+            throw new Error('Required parameter ordenId was null or undefined when calling reportarResultadoOrden.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (apiKeyAuth) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["X-API-Key"]) {
+            headers = headers.set('X-API-Key', this.configuration.apiKeys["X-API-Key"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<any>('post',`${this.basePath}/api/devices/${encodeURIComponent(String(androidId))}/ordenes/${encodeURIComponent(String(ordenId))}/resultado`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,

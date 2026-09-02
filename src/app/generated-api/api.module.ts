@@ -3,22 +3,30 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { APKsService } from './api/aPKs.service';
 import { AutenticacinService } from './api/autenticacin.service';
 import { DispositivosService } from './api/dispositivos.service';
 import { LocalesService } from './api/locales.service';
 import { MapeoDeRedService } from './api/mapeoDeRed.service';
+import { ProvinciasService } from './api/provincias.service';
+import { RdenesService } from './api/rdenes.service';
 import { SeccionesService } from './api/secciones.service';
+import { TiposDeLocalService } from './api/tiposDeLocal.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
   providers: [
+    APKsService,
     AutenticacinService,
     DispositivosService,
     LocalesService,
     MapeoDeRedService,
-    SeccionesService ]
+    ProvinciasService,
+    RdenesService,
+    SeccionesService,
+    TiposDeLocalService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {

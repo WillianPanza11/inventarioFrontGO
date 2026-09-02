@@ -64,17 +64,17 @@ export class MapeoDeRedService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public actualizar1(body: NetworkMappingRequestDTO, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public actualizar1(body: NetworkMappingRequestDTO, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public actualizar1(body: NetworkMappingRequestDTO, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public actualizar1(body: NetworkMappingRequestDTO, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public actualizar3(body: NetworkMappingRequestDTO, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public actualizar3(body: NetworkMappingRequestDTO, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public actualizar3(body: NetworkMappingRequestDTO, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public actualizar3(body: NetworkMappingRequestDTO, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling actualizar1.');
+            throw new Error('Required parameter body was null or undefined when calling actualizar3.');
         }
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling actualizar1.');
+            throw new Error('Required parameter id was null or undefined when calling actualizar3.');
         }
 
         let headers = this.defaultHeaders;
@@ -122,13 +122,13 @@ export class MapeoDeRedService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public crear1(body: NetworkMappingRequestDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public crear1(body: NetworkMappingRequestDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public crear1(body: NetworkMappingRequestDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public crear1(body: NetworkMappingRequestDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public crear4(body: NetworkMappingRequestDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public crear4(body: NetworkMappingRequestDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public crear4(body: NetworkMappingRequestDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public crear4(body: NetworkMappingRequestDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling crear1.');
+            throw new Error('Required parameter body was null or undefined when calling crear4.');
         }
 
         let headers = this.defaultHeaders;
@@ -176,13 +176,13 @@ export class MapeoDeRedService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public eliminar1(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public eliminar1(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public eliminar1(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public eliminar1(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public eliminar3(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public eliminar3(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public eliminar3(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public eliminar3(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling eliminar1.');
+            throw new Error('Required parameter id was null or undefined when calling eliminar3.');
         }
 
         let headers = this.defaultHeaders;
@@ -222,10 +222,10 @@ export class MapeoDeRedService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listar1(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public listar1(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public listar1(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public listar1(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public listar4(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public listar4(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public listar4(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public listar4(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 

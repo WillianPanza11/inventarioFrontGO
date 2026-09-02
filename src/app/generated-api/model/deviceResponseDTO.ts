@@ -37,4 +37,28 @@ export interface DeviceResponseDTO {
     online?: any;
     lastSeen?: any;
     createdAt?: any;
+    /**
+     * Espacio total de almacenamiento de datos, en bytes
+     */
+    almacenamientoTotal?: any;
+    /**
+     * Espacio libre de almacenamiento de datos, en bytes
+     */
+    almacenamientoLibre?: any;
+    /**
+     * Espacio usado de almacenamiento de datos, en bytes
+     */
+    almacenamientoUsado?: any;
+    /**
+     * RAM total del equipo, en bytes
+     */
+    ramTotal?: any;
+    /**
+     * RAM disponible del equipo, en bytes
+     */
+    ramDisponible?: any;
+    /**
+     * true si el equipo reportó estado de memoria baja en su último heartbeat
+     */
+    ramBaja?: any;
 }

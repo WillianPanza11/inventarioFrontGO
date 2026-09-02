@@ -9,12 +9,13 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import {
-  Local,
   LocalesService,
+  LocalResponseDTO,
   MapeoDeRedService,
   NetworkMappingRequestDTO,
   NetworkMappingResponseDTO,
 } from '../../../generated-api';
+import { sortByIdDesc } from '../../../shared/sort-by-id-desc';
 
 @Component({
   selector: 'app-network-mapping-admin',
@@ -40,7 +41,7 @@ export class NetworkMappingAdmin {
 
   protected readonly loading = signal(true);
   protected readonly mappings = signal<NetworkMappingResponseDTO[]>([]);
-  protected readonly locales = signal<Local[]>([]);
+  protected readonly locales = signal<LocalResponseDTO[]>([]);
   protected readonly dialogVisible = signal(false);
   protected readonly saving = signal(false);
   protected readonly editingId = signal<unknown>(null);
@@ -53,17 +54,19 @@ export class NetworkMappingAdmin {
   });
 
   constructor() {
-    this.localesService.listar2().subscribe((locales) => this.locales.set((locales as Local[]) ?? []));
+    this.loadLocales();
     this.load();
   }
 
   protected nuevo(): void {
+    this.loadLocales();
     this.editingId.set(null);
     this.form.reset({ subnet: '', ssid: '', localId: null, activo: true });
     this.dialogVisible.set(true);
   }
 
   protected editar(mapping: NetworkMappingResponseDTO): void {
+    this.loadLocales();
     this.editingId.set(mapping.id);
     this.form.setValue({
       subnet: String(mapping.subnet ?? ''),
@@ -86,7 +89,7 @@ export class NetworkMappingAdmin {
 
     const body = this.form.getRawValue() as NetworkMappingRequestDTO;
     const id = this.editingId();
-    const request = id != null ? this.mapeoService.actualizar1(body, id) : this.mapeoService.crear1(body);
+    const request = id != null ? this.mapeoService.actualizar3(body, id) : this.mapeoService.crear4(body);
 
     this.saving.set(true);
     request.subscribe({
@@ -109,7 +112,7 @@ export class NetworkMappingAdmin {
       message: `¿Eliminar la regla de mapeo de "${mapping.subnet || mapping.ssid}"?`,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.mapeoService.eliminar1(mapping.id).subscribe({
+        this.mapeoService.eliminar3(mapping.id).subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: 'Regla eliminada.' });
             this.load();
@@ -121,11 +124,15 @@ export class NetworkMappingAdmin {
     });
   }
 
+  private loadLocales(): void {
+    this.localesService.listar5().subscribe((locales) => this.locales.set((locales as LocalResponseDTO[]) ?? []));
+  }
+
   private load(): void {
     this.loading.set(true);
-    this.mapeoService.listar1().subscribe({
-      next: (mappings) => {
-        this.mappings.set((mappings as NetworkMappingResponseDTO[]) ?? []);
+    this.mapeoService.listar4().subscribe({
+      next: (mappings: NetworkMappingResponseDTO[]) => {
+        this.mappings.set(sortByIdDesc((mappings as NetworkMappingResponseDTO[]) ?? []));
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

@@ -33,6 +33,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/alerts/alerts').then((m) => m.Alerts),
       },
       {
+        path: 'locales/:id',
+        loadComponent: () =>
+          import('./features/locales/local-detalle/local-detalle').then((m) => m.LocalDetalle),
+      },
+      {
         path: 'admin',
         canActivate: [adminGuard],
         loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),

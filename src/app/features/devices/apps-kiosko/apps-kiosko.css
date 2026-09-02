@@ -90,3 +90,13 @@
 .empty-state {
   color: var(--p-text-muted-color, #64748b);
 }
+
+.state-locked {
+  color: #10b981;
+  font-size: 0.9rem;
+}
+
+.state-unlocked {
+  color: var(--p-text-muted-color, #94a3b8);
+  font-size: 0.9rem;
+}

@@ -33,7 +33,7 @@ export class Alerts {
 
   private load(): void {
     this.loading.set(true);
-    this.dispositivosService.listar3(undefined, true).subscribe({
+    this.dispositivosService.listar7(undefined, true).subscribe({
       next: (devices: DeviceResponseDTO[]) => {
         this.devices.set((devices as DeviceResponseDTO[]) ?? []);
         this.loading.set(false);

@@ -52,28 +52,70 @@
   } @else if (localStats().length === 0) {
     <p class="empty-state">No hay locales registrados.</p>
   } @else {
-    <div class="local-grid">
-      @for (stat of localStats(); track stat.localId) {
-        <p-card styleClass="local-card">
-          <div class="local-header">
-            <span class="local-name">{{ stat.nombre }}</span>
-            @if (stat.fueraDeSitio > 0) {
-              <p-tag severity="danger" value="{{ stat.fueraDeSitio }} fuera de sitio" />
+    <p-accordion [value]="expandedTipoKeys()" (valueChange)="onExpandedTipoChange($event)" [multiple]="true">
+      @for (tipo of tipoGroups(); track tipo.key) {
+        <p-accordion-panel [value]="tipo.key">
+          <p-accordion-header>
+            <div class="group-header tipo-header">
+              <span class="group-name"><i [class]="tipo.icon" aria-hidden="true"></i> {{ tipo.nombre }}</span>
+              <div class="group-summary">
+                <span class="group-count">{{ tipo.totals.locales }} locales</span>
+                <span class="count online"><i class="pi pi-circle-fill"></i> {{ tipo.totals.online }} online</span>
+                <span class="count offline"><i class="pi pi-circle-fill"></i> {{ tipo.totals.offline }} offline</span>
+                @if (tipo.totals.fueraDeSitio > 0) {
+                  <p-tag severity="danger" value="{{ tipo.totals.fueraDeSitio }} fuera de sitio" />
+                }
+              </div>
+            </div>
+          </p-accordion-header>
+          <p-accordion-content>
+            @for (provincia of tipo.provincias; track provincia.key) {
+              <div class="provincia-group">
+                <div class="group-header provincia-header">
+                  <span class="group-name"><i class="pi pi-map-marker" aria-hidden="true"></i> {{ provincia.nombre }}</span>
+                  <div class="group-summary">
+                    <span class="group-count">{{ provincia.totals.locales }} locales</span>
+                    <span class="count online">
+                      <i class="pi pi-circle-fill"></i> {{ provincia.totals.online }} online
+                    </span>
+                    <span class="count offline">
+                      <i class="pi pi-circle-fill"></i> {{ provincia.totals.offline }} offline
+                    </span>
+                  </div>
+                </div>
+
+                <div class="local-grid">
+                  @for (stat of provincia.locales; track stat.localId) {
+                    <a class="local-card-link" [routerLink]="['/locales', stat.localId]">
+                      <p-card styleClass="local-card">
+                        <div class="local-header">
+                          <span class="local-name">{{ stat.nombre }}</span>
+                          @if (stat.fueraDeSitio > 0) {
+                            <p-tag severity="danger" value="{{ stat.fueraDeSitio }} fuera de sitio" />
+                          }
+                        </div>
+
+                        <div class="stacked-bar">
+                          <div class="bar-segment online" [style.width.%]="onlinePct(stat)"></div>
+                          <div class="bar-segment offline" [style.width.%]="offlinePct(stat)"></div>
+                        </div>
+
+                        <div class="local-counts">
+                          <span class="count online"><i class="pi pi-circle-fill"></i> {{ stat.online }} online</span>
+                          <span class="count offline">
+                            <i class="pi pi-circle-fill"></i> {{ stat.offline }} offline
+                          </span>
+                          <span class="count total">{{ stat.total }} equipos</span>
+                        </div>
+                      </p-card>
+                    </a>
+                  }
+                </div>
+              </div>
             }
-          </div>
-
-          <div class="stacked-bar">
-            <div class="bar-segment online" [style.width.%]="onlinePct(stat)"></div>
-            <div class="bar-segment offline" [style.width.%]="offlinePct(stat)"></div>
-          </div>
-
-          <div class="local-counts">
-            <span class="count online"><i class="pi pi-circle-fill"></i> {{ stat.online }} online</span>
-            <span class="count offline"><i class="pi pi-circle-fill"></i> {{ stat.offline }} offline</span>
-            <span class="count total">{{ stat.total }} equipos</span>
-          </div>
-        </p-card>
+          </p-accordion-content>
+        </p-accordion-panel>
       }
-    </div>
+    </p-accordion>
   }
 </div>

@@ -42,6 +42,12 @@
           }
           @if (app.esInventario) {
             <p-tag value="Requerida" icon="pi pi-lock" severity="secondary" />
+          } @else {
+            <i
+              [class]="kioskoStateIcon(app)"
+              [title]="app.permitida ? 'Permitida en el kiosko' : 'Bloqueada en el kiosko'"
+              [attr.aria-label]="app.permitida ? 'Permitida en el kiosko' : 'Bloqueada en el kiosko'"
+            ></i>
           }
           <p-toggleswitch [ngModel]="app.permitida" [disabled]="app.esInventario" (onChange)="toggle(app)" />
         </div>

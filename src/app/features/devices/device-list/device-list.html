@@ -43,6 +43,8 @@
   </div>
 
   <p-table
+    [resizableColumns]="true" 
+    columnResizeMode="expand"
     [value]="filteredDevices()"
     [loading]="loading()"
     [paginator]="true"
@@ -54,18 +56,19 @@
   >
     <ng-template #header>
       <tr>
-        <th pSortableColumn="androidId">ID <p-sortIcon field="androidId" /></th>
-        <th pSortableColumn="model">Modelo <p-sortIcon field="model" /></th>
-        <th>IP</th>
-        <th>MAC</th>
-        <th pSortableColumn="responsable">Responsable <p-sortIcon field="responsable" /></th>
-        <th pSortableColumn="localAsignadoNombre">Local asignado <p-sortIcon field="localAsignadoNombre" /></th>
-        <th>Local detectado</th>
-        <th pSortableColumn="seccionNombre">Sección <p-sortIcon field="seccionNombre" /></th>
-        <th>Batería</th>
-        <th>Estado</th>
-        <th>Sitio</th>
-        <th pSortableColumn="lastSeen">Última vez <p-sortIcon field="lastSeen" /></th>
+        <th pSortableColumn="androidId" pResizableColumn>ID <p-sortIcon field="androidId" /></th>
+        <th pSortableColumn="model" pResizableColumn>Modelo <p-sortIcon field="model" /></th>
+        <th pResizableColumn>IP</th>
+        <th pResizableColumn>MAC</th>
+        <th pSortableColumn="responsable" pResizableColumn>Responsable <p-sortIcon field="responsable" /></th>
+        <th pSortableColumn="localAsignadoNombre" pResizableColumn>Local asignado <p-sortIcon field="localAsignadoNombre" /></th>
+        <th pResizableColumn>Local detectado</th>
+        <th pSortableColumn="seccionNombre" pResizableColumn>Sección <p-sortIcon field="seccionNombre" /></th>
+        <th pResizableColumn>Batería</th>
+        <th pResizableColumn>Recursos</th>
+        <th pResizableColumn>Estado</th>
+        <th pResizableColumn>Sitio</th>
+        <th pSortableColumn="lastSeen" pResizableColumn>Última vez <p-sortIcon field="lastSeen" /></th>
         <th></th>
       </tr>
     </ng-template>
@@ -81,6 +84,15 @@
         <td>{{ device.localDetectado }}</td>
         <td>{{ device.seccionNombre }}</td>
         <td>{{ device.battery }}%</td>
+        <td>
+          @if (hasLowResources(device)) {
+            <i
+              class="pi pi-exclamation-triangle resource-warning-icon"
+              [pTooltip]="lowResourcesTooltip(device)"
+              [attr.aria-label]="lowResourcesTooltip(device)"
+            ></i>
+          }
+        </td>
         <td>
           <p-tag [value]="device.online ? 'Online' : 'Offline'" [severity]="device.online ? 'success' : 'secondary'" />
         </td>
@@ -102,7 +114,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="12">No hay dispositivos que coincidan con los filtros.</td>
+        <td colspan="13">No hay dispositivos que coincidan con los filtros.</td>
       </tr>
     </ng-template>
   </p-table>

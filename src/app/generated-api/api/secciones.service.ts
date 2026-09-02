@@ -63,17 +63,17 @@ export class SeccionesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public actualizar(body: Seccion, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public actualizar(body: Seccion, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public actualizar(body: Seccion, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public actualizar(body: Seccion, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public actualizar1(body: Seccion, id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public actualizar1(body: Seccion, id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public actualizar1(body: Seccion, id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public actualizar1(body: Seccion, id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling actualizar.');
+            throw new Error('Required parameter body was null or undefined when calling actualizar1.');
         }
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling actualizar.');
+            throw new Error('Required parameter id was null or undefined when calling actualizar1.');
         }
 
         let headers = this.defaultHeaders;
@@ -121,13 +121,13 @@ export class SeccionesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public crear(body: Seccion, observe?: 'body', reportProgress?: boolean): Observable<Seccion>;
-    public crear(body: Seccion, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Seccion>>;
-    public crear(body: Seccion, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Seccion>>;
-    public crear(body: Seccion, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public crear1(body: Seccion, observe?: 'body', reportProgress?: boolean): Observable<Seccion>;
+    public crear1(body: Seccion, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Seccion>>;
+    public crear1(body: Seccion, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Seccion>>;
+    public crear1(body: Seccion, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling crear.');
+            throw new Error('Required parameter body was null or undefined when calling crear1.');
         }
 
         let headers = this.defaultHeaders;
@@ -175,13 +175,13 @@ export class SeccionesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public eliminar(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public eliminar(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public eliminar(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public eliminar(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public eliminar1(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public eliminar1(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public eliminar1(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public eliminar1(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling eliminar.');
+            throw new Error('Required parameter id was null or undefined when calling eliminar1.');
         }
 
         let headers = this.defaultHeaders;
@@ -221,10 +221,10 @@ export class SeccionesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listar(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public listar(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public listar(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public listar(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public listar1(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public listar1(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public listar1(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public listar1(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 

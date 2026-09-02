@@ -27,14 +27,18 @@ export class AppsKiosko implements OnInit {
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
   protected readonly apps = signal<AppKioskoDTO[]>([]);
-  private originalPermitidas = new Map<unknown, unknown>();
+  private readonly originalPermitidas = signal<Map<unknown, unknown>>(new Map());
 
   readonly hasPendingChanges = computed(() =>
-    this.apps().some((app) => app.permitida !== this.originalPermitidas.get(app.packageName)),
+    this.apps().some((app) => app.permitida !== this.originalPermitidas().get(app.packageName)),
   );
 
   ngOnInit(): void {
     this.load();
+  }
+
+  protected kioskoStateIcon(app: AppKioskoDTO): string {
+    return app.permitida ? 'pi pi-lock state-locked' : 'pi pi-lock-open state-unlocked';
   }
 
   protected toggle(app: AppKioskoDTO): void {
@@ -48,7 +52,7 @@ export class AppsKiosko implements OnInit {
 
   protected guardar(): void {
     const cambios: AppTogglePayload[] = this.apps()
-      .filter((app) => !app.esInventario && app.permitida !== this.originalPermitidas.get(app.packageName))
+      .filter((app) => !app.esInventario && app.permitida !== this.originalPermitidas().get(app.packageName))
       .map((app) => ({ packageName: app.packageName, permitida: app.permitida }));
 
     if (cambios.length === 0) {
@@ -61,7 +65,7 @@ export class AppsKiosko implements OnInit {
     this.dispositivosService.actualizarAppsKiosko(body, this.androidId()).subscribe({
       next: () => {
         this.saving.set(false);
-        this.originalPermitidas = new Map(this.apps().map((app) => [app.packageName, app.permitida]));
+        this.originalPermitidas.set(new Map(this.apps().map((app) => [app.packageName, app.permitida])));
         this.messageService.add({
           severity: 'success',
           summary: 'Cambios guardados',
@@ -85,7 +89,7 @@ export class AppsKiosko implements OnInit {
       next: (apps: AppKioskoDTO[]) => {
         const list = apps ?? [];
         this.apps.set(list);
-        this.originalPermitidas = new Map(list.map((app) => [app.packageName, app.permitida]));
+        this.originalPermitidas.set(new Map(list.map((app) => [app.packageName, app.permitida])));
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

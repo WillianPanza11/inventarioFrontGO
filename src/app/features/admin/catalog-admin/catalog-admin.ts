@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { sortByIdDesc } from '../../../shared/sort-by-id-desc';
 
 export interface CatalogItem {
   id?: unknown;
@@ -133,7 +134,7 @@ export class CatalogAdmin implements OnInit {
       .listar()
       .subscribe({
         next: (items) => {
-          this.items.set((items as CatalogItem[]) ?? []);
+          this.items.set(sortByIdDesc((items as CatalogItem[]) ?? []));
           this.loading.set(false);
         },
         error: () => this.loading.set(false),

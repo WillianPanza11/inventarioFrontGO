@@ -44,7 +44,7 @@
           </div>
           <div>
             <dt>Batería</dt>
-            <dd>{{ d.battery }}%</dd>
+            <dd><i [class]="batteryIcon(d.battery)" aria-hidden="true"></i> {{ d.battery }}%</dd>
           </div>
           <div>
             <dt>Responsable</dt>
@@ -64,7 +64,7 @@
           </div>
           <div>
             <dt>Última vez visto</dt>
-            <dd>{{ d.lastSeen | date: 'medium' }}</dd>
+            <dd><i class="pi pi-clock" aria-hidden="true"></i> {{ d.lastSeen | date: 'medium' }}</dd>
           </div>
           <div>
             <dt>Registrado</dt>
@@ -75,6 +75,46 @@
         @if (authService.isAdmin()) {
           <p-button label="Editar asignación" icon="pi pi-pencil" (onClick)="editar()" />
         }
+      </p-card>
+
+      <p-card header="Recursos" styleClass="detail-card">
+        <div class="resource-block">
+          <span class="resource-title"><i class="pi pi-database" aria-hidden="true"></i> Almacenamiento</span>
+          @let storagePercent = storagePct(d);
+          @if (storagePercent !== null) {
+            <p-progressbar
+              [value]="storagePercent"
+              [showValue]="false"
+              [color]="resourceColor(storagePercent)"
+            />
+            <p class="resource-detail">
+              {{ d.almacenamientoUsado | formatBytes }} usados de {{ d.almacenamientoTotal | formatBytes }}
+              ({{ d.almacenamientoLibre | formatBytes }} libres)
+            </p>
+          } @else {
+            <p class="empty-state">No disponible</p>
+          }
+        </div>
+
+        <div class="resource-block">
+          <span class="resource-title">
+            <i class="pi pi-microchip" aria-hidden="true"></i> Memoria RAM
+            @if (d.ramBaja) {
+              <span class="resource-warning" title="El equipo reportó memoria baja" aria-label="Memoria baja">
+                <i class="pi pi-exclamation-triangle" aria-hidden="true"></i> Memoria baja
+              </span>
+            }
+          </span>
+          @let ramPercent = ramPct(d);
+          @if (ramPercent !== null) {
+            <p-progressbar [value]="ramPercent" [showValue]="false" [color]="resourceColor(ramPercent)" />
+            <p class="resource-detail">
+              {{ d.ramDisponible | formatBytes }} disponibles de {{ d.ramTotal | formatBytes }}
+            </p>
+          } @else {
+            <p class="empty-state">No disponible</p>
+          }
+        </div>
       </p-card>
 
       <p-card header="Historial de movimientos" styleClass="detail-card">

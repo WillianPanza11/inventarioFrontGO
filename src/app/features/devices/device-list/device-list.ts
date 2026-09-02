@@ -10,11 +10,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { AuthService } from '../../../core/auth/auth.service';
-import { DeviceResponseDTO, DispositivosService, Local, LocalesService } from '../../../generated-api';
+import { DeviceResponseDTO, DispositivosService, LocalesService, LocalResponseDTO } from '../../../generated-api';
+import { formatBytes } from '../../../shared/format-bytes.pipe';
 import { AsignacionDialog } from '../asignacion-dialog/asignacion-dialog';
 
 type OnlineFilter = 'todos' | 'online' | 'offline';
+
+const LOW_STORAGE_FREE_RATIO = 0.1;
 
 @Component({
   selector: 'app-device-list',
@@ -31,6 +35,7 @@ type OnlineFilter = 'todos' | 'online' | 'offline';
     SelectModule,
     TableModule,
     TagModule,
+    TooltipModule,
   ],
   templateUrl: './device-list.html',
   styleUrl: './device-list.css',
@@ -42,7 +47,7 @@ export class DeviceList {
 
   protected readonly loading = signal(true);
   protected readonly devices = signal<DeviceResponseDTO[]>([]);
-  protected readonly locales = signal<Local[]>([]);
+  protected readonly locales = signal<LocalResponseDTO[]>([]);
 
   protected readonly search = signal('');
   protected readonly onlineFilter = signal<OnlineFilter>('todos');
@@ -73,13 +78,39 @@ export class DeviceList {
   });
 
   constructor() {
-    this.localesService.listar2().subscribe((locales) => this.locales.set((locales as Local[]) ?? []));
+    this.localesService.listar5().subscribe((locales) => this.locales.set((locales as LocalResponseDTO[]) ?? []));
     this.reload();
   }
 
   protected shortId(id: unknown): string {
     const str = String(id ?? '');
     return str.length > 10 ? `${str.slice(0, 10)}…` : str;
+  }
+
+  protected hasLowResources(device: DeviceResponseDTO): boolean {
+    return this.isStorageLow(device) || device.ramBaja === true;
+  }
+
+  protected lowResourcesTooltip(device: DeviceResponseDTO): string {
+    const parts: string[] = [];
+    if (this.isStorageLow(device)) {
+      parts.push(
+        `Almacenamiento bajo: ${formatBytes(device.almacenamientoLibre)} libres de ${formatBytes(device.almacenamientoTotal)}`,
+      );
+    }
+    if (device.ramBaja === true) {
+      parts.push('Memoria RAM baja');
+    }
+    return parts.join(' · ');
+  }
+
+  private isStorageLow(device: DeviceResponseDTO): boolean {
+    const total = Number(device.almacenamientoTotal);
+    const libre = Number(device.almacenamientoLibre);
+    if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(libre)) {
+      return false;
+    }
+    return libre / total < LOW_STORAGE_FREE_RATIO;
   }
 
   protected setOnlineFilter(value: OnlineFilter): void {
@@ -112,7 +143,7 @@ export class DeviceList {
     const fueraDeSitio = this.soloFueraDeSitio() ? true : undefined;
     const local = this.localFilter() ?? undefined;
 
-    this.dispositivosService.listar3(online, fueraDeSitio, local).subscribe({
+    this.dispositivosService.listar7(online, fueraDeSitio, local).subscribe({
       next: (devices: DeviceResponseDTO[]) => {
         this.devices.set((devices as DeviceResponseDTO[]) ?? []);
         this.loading.set(false);

@@ -61,6 +61,29 @@
   margin: 0.1rem 0 0;
   font-size: 0.9rem;
   color: var(--p-text-color, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.detail-fields dd i {
+  font-size: 0.85rem;
+}
+
+.detail-fields dd i.pi-clock {
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.detail-fields dd i.battery-high {
+  color: #10b981;
+}
+
+.detail-fields dd i.battery-mid {
+  color: #f59e0b;
+}
+
+.detail-fields dd i.battery-low {
+  color: #ef4444;
 }
 
 .mov-date {
@@ -77,6 +100,42 @@
 
 .empty-state {
   color: var(--p-text-muted-color, #64748b);
+}
+
+.resource-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.resource-block:last-child {
+  margin-bottom: 0;
+}
+
+.resource-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--p-text-color, #1e293b);
+}
+
+.resource-detail {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.resource-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #f59e0b;
 }
 
 .apps-kiosko-card {

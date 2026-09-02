@@ -4,16 +4,15 @@
   <p-tablist>
     <p-tab value="locales">Locales</p-tab>
     <p-tab value="secciones">Secciones</p-tab>
+    <p-tab value="tipos-local">Tipos de local</p-tab>
+    <p-tab value="provincias">Provincias</p-tab>
     <p-tab value="mapeo">Mapeo de red</p-tab>
+    <p-tab value="apks">APKs</p-tab>
+    <p-tab value="ordenes">Órdenes</p-tab>
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel value="locales">
-      <app-catalog-admin
-        [service]="localesAdapter"
-        itemLabel="local"
-        newLabel="Nuevo local"
-        emptyMessage="No hay locales registrados."
-      />
+      <app-locales-admin />
     </p-tabpanel>
     <p-tabpanel value="secciones">
       <app-catalog-admin
@@ -23,8 +22,30 @@
         emptyMessage="No hay secciones registradas."
       />
     </p-tabpanel>
+    <p-tabpanel value="tipos-local">
+      <app-catalog-admin
+        [service]="tiposDeLocalAdapter"
+        itemLabel="tipo de local"
+        newLabel="Nuevo tipo de local"
+        emptyMessage="No hay tipos de local registrados."
+      />
+    </p-tabpanel>
+    <p-tabpanel value="provincias">
+      <app-catalog-admin
+        [service]="provinciasAdapter"
+        itemLabel="provincia"
+        newLabel="Nueva provincia"
+        emptyMessage="No hay provincias registradas."
+      />
+    </p-tabpanel>
     <p-tabpanel value="mapeo">
       <app-network-mapping-admin />
+    </p-tabpanel>
+    <p-tabpanel value="apks">
+      <app-apks-admin />
+    </p-tabpanel>
+    <p-tabpanel value="ordenes">
+      <app-ordenes-admin />
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

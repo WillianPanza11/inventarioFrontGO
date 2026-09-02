@@ -27,3 +27,9 @@
 :host ::ng-deep .device-table td {
   font-size: 0.85rem;
 }
+
+:host ::ng-deep .resource-warning-icon {
+  color: #f59e0b;
+  font-size: 1rem;
+  cursor: help;
+}

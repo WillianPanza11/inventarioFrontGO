@@ -34,4 +34,28 @@ export interface HeartbeatDTO {
      * Versión de la app de inventario instalada en el dispositivo
      */
     appVersion?: any;
+    /**
+     * Espacio total de almacenamiento de datos, en bytes
+     */
+    almacenamientoTotal?: any;
+    /**
+     * Espacio libre de almacenamiento de datos, en bytes
+     */
+    almacenamientoLibre?: any;
+    /**
+     * Espacio usado de almacenamiento de datos, en bytes. Opcional: si no viene, no se deriva de total/libre, se guarda tal cual lo reporta el equipo.
+     */
+    almacenamientoUsado?: any;
+    /**
+     * RAM total del equipo, en bytes
+     */
+    ramTotal?: any;
+    /**
+     * RAM disponible del equipo, en bytes
+     */
+    ramDisponible?: any;
+    /**
+     * true si el sistema operativo del equipo está en estado de memoria baja (onTrimMemory/onLowMemory)
+     */
+    ramBaja?: any;
 }
