@@ -171,7 +171,7 @@ export class APKsService {
 
     /**
      * Descarga el archivo de un APK subido internamente
-     * Accesible con X-API-Key (la app, vía urlDescarga del heartbeat) o JWT (panel). Solo sirve APKs con origen&#x3D;INTERNO; streaming desde disco, no carga el archivo completo en memoria.
+     * Público sin autenticación a propósito: el provisioning por QR necesita bajar el APK con el equipo recién reseteado, antes de tener API Key. Solo sirve APKs con origen&#x3D;INTERNO; streaming desde disco, no carga el archivo completo en memoria.
      * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -186,11 +186,6 @@ export class APKsService {
         }
 
         let headers = this.defaultHeaders;
-
-        // authentication (apiKeyAuth) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-API-Key"]) {
-            headers = headers.set('X-API-Key', this.configuration.apiKeys["X-API-Key"]);
-        }
 
         // authentication (bearerAuth) required
         if (this.configuration.accessToken) {
@@ -213,6 +208,49 @@ export class APKsService {
         ];
 
         return this.httpClient.request<any>('get',`${this.basePath}/api/apks/${encodeURIComponent(String(id))}/download`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Descarga el APK vigente de provisioning
+     * URL estable para el QR de provisioning: no depende del id, siempre sirve el APK marcado con PUT /api/apks/{id}/marcar-provisioning, así que el QR impreso sigue funcionando aunque se reemplace el APK. Público sin autenticación, igual que /{id}/download.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public descargarProvisioning(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public descargarProvisioning(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public descargarProvisioning(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public descargarProvisioning(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (bearerAuth) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<any>('get',`${this.basePath}/api/apks/provisioning/download`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -303,6 +341,54 @@ export class APKsService {
         ];
 
         return this.httpClient.request<any>('get',`${this.basePath}/api/apks`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Marca este APK como el vigente de provisioning (solo ADMIN)
+     * Desmarca automáticamente cualquier otro APK que estuviera marcado: a lo sumo uno puede ser el vigente. Es el que sirve GET /api/apks/provisioning/download, la URL estable que llevan los QR impresos. Solo admite APKs con origen&#x3D;INTERNO.
+     * @param id 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public marcarProvisioning(id: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public marcarProvisioning(id: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public marcarProvisioning(id: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public marcarProvisioning(id: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling marcarProvisioning.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (bearerAuth) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<any>('put',`${this.basePath}/api/apks/${encodeURIComponent(String(id))}/marcar-provisioning`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

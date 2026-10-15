@@ -28,4 +28,8 @@ export interface ApkResponseDTO {
      * INTERNO: archivo en disco, servido por GET /api/apks/{id}/download. EXTERNO: urlDescarga apunta a un host de terceros.
      */
     origen?: any;
+    /**
+     * true si es el APK vigente de provisioning: el que sirve GET /api/apks/provisioning/download (la URL estable de los QR impresos). A lo sumo un APK del catálogo lo tiene en true.
+     */
+    esProvisioning?: any;
 }
