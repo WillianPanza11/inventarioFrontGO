@@ -4,10 +4,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
+import { TooltipModule } from 'primeng/tooltip';
 import { AuthService } from '../../../core/auth/auth.service';
 import { CanComponentDeactivate } from '../../../core/pending-changes.guard';
 import { DeviceResponseDTO, DispositivosService, MovimientoResponseDTO } from '../../../generated-api';
@@ -33,6 +34,7 @@ const RESOURCE_CRITICAL_THRESHOLD = 90;
     ProgressBarModule,
     TagModule,
     TimelineModule,
+    TooltipModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './device-detail.html',
@@ -42,6 +44,7 @@ export class DeviceDetail implements CanComponentDeactivate {
   private readonly route = inject(ActivatedRoute);
   private readonly dispositivosService = inject(DispositivosService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
   protected readonly authService = inject(AuthService);
 
   protected readonly androidId = this.route.snapshot.paramMap.get('androidId') ?? '';
@@ -79,6 +82,19 @@ export class DeviceDetail implements CanComponentDeactivate {
 
   protected editar(): void {
     this.dialogVisible.set(true);
+  }
+
+  protected esCopiable(value: unknown): boolean {
+    return String(value ?? '').trim() !== '';
+  }
+
+  protected copiar(value: unknown, label: string): void {
+    if (!this.esCopiable(value)) {
+      return;
+    }
+    navigator.clipboard.writeText(String(value)).then(() => {
+      this.messageService.add({ severity: 'success', summary: 'Copiado', detail: `${label} copiado.` });
+    });
   }
 
   protected batteryIcon(battery: unknown): string {

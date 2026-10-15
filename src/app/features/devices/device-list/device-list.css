@@ -33,3 +33,54 @@
   font-size: 1rem;
   cursor: help;
 }
+
+:host ::ng-deep .device-table .serial-col {
+  min-width: 220px;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.serial-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  overflow: visible;
+  min-width: 0;
+}
+
+.serial-line,
+.android-id-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.serial-main {
+  font-family: monospace;
+  font-weight: 600;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  overflow: visible;
+  text-overflow: clip;
+  min-width: 0;
+}
+
+.android-id-sub {
+  font-size: 0.72rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+:host ::ng-deep .serial-line .p-button,
+:host ::ng-deep .android-id-line .p-button {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+:host ::ng-deep .serial-line .p-button .p-button-icon,
+:host ::ng-deep .android-id-line .p-button .p-button-icon {
+  font-size: 0.7rem;
+}

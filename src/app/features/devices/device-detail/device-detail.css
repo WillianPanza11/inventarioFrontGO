@@ -36,6 +36,51 @@
 .detail-header h2 {
   margin: 0;
   font-size: 1.1rem;
+  font-family: monospace;
+}
+
+.detail-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.title-line {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+:host ::ng-deep .title-line .p-button,
+:host ::ng-deep .detail-subtitle .p-button,
+:host ::ng-deep .detail-fields dd .p-button {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+:host ::ng-deep .title-line .p-button .p-button-icon,
+:host ::ng-deep .detail-subtitle .p-button .p-button-icon,
+:host ::ng-deep .detail-fields dd .p-button .p-button-icon {
+  font-size: 0.75rem;
+}
+
+.detail-subtitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--p-text-muted-color, #64748b);
+}
+
+.mono {
+  font-family: monospace;
+}
+
+.detail-fields dd.field-secondary {
+  color: var(--p-text-muted-color, #64748b);
+  font-size: 0.82rem;
 }
 
 .badges {

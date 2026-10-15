@@ -7,7 +7,7 @@
         type="text"
         [ngModel]="search()"
         (ngModelChange)="search.set($event)"
-        placeholder="Buscar por ID, IP o responsable"
+        placeholder="Buscar por serial, ID, IP o responsable"
       />
     </p-iconfield>
 
@@ -56,8 +56,8 @@
   >
     <ng-template #header>
       <tr>
-        <th pSortableColumn="androidId" pResizableColumn>ID <p-sortIcon field="androidId" /></th>
-        <th pSortableColumn="model" pResizableColumn>Modelo <p-sortIcon field="model" /></th>
+        <th pSortableColumn="serial" pResizableColumn class="serial-col">Serial <p-sortIcon field="serial" /></th>
+        <th pSortableColumn="manufacturer" pResizableColumn>Fabricante · Modelo <p-sortIcon field="manufacturer" /></th>
         <th pResizableColumn>IP</th>
         <th pResizableColumn>MAC</th>
         <th pSortableColumn="responsable" pResizableColumn>Responsable <p-sortIcon field="responsable" /></th>
@@ -75,8 +75,35 @@
 
     <ng-template #body let-device>
       <tr>
-        <td [title]="device.androidId">{{ shortId(device.androidId) }}</td>
-        <td>{{ device.model }}</td>
+        <td class="serial-col">
+          <div class="serial-cell">
+            <span class="serial-line">
+              <span class="serial-main">{{ device.serial || '—' }}</span>
+              @if (esCopiable(device.serial)) {
+                <p-button
+                  icon="pi pi-copy"
+                  [text]="true"
+                  size="small"
+                  (onClick)="copiar(device.serial, 'Serial')"
+                  pTooltip="Copiar serial"
+                />
+              }
+            </span>
+            <span class="android-id-line">
+              <span class="android-id-sub" [title]="device.androidId">ID: {{ shortId(device.androidId) }}</span>
+              @if (esCopiable(device.androidId)) {
+                <p-button
+                  icon="pi pi-copy"
+                  [text]="true"
+                  size="small"
+                  (onClick)="copiar(device.androidId, 'Android ID')"
+                  pTooltip="Copiar Android ID"
+                />
+              }
+            </span>
+          </div>
+        </td>
+        <td>{{ fabricanteModelo(device) }}</td>
         <td>{{ device.ip }}</td>
         <td>{{ device.mac }}</td>
         <td>{{ device.responsable }}</td>

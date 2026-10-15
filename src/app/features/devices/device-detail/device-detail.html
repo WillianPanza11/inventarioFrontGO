@@ -7,7 +7,25 @@
     <div class="detail-grid">
       <p-card header="Datos del equipo" styleClass="detail-card">
         <div class="detail-header">
-          <h2>{{ d.androidId }}</h2>
+          <div class="detail-title">
+            <span class="title-line">
+              <h2>{{ d.serial || d.androidId }}</h2>
+              @if (esCopiable(d.serial)) {
+                <p-button icon="pi pi-copy" [text]="true" size="small" (onClick)="copiar(d.serial, 'Serial')" pTooltip="Copiar serial" />
+              }
+            </span>
+            <p class="detail-subtitle">
+              Android ID: {{ d.androidId }}
+              @if (esCopiable(d.androidId)) {
+                <p-button icon="pi pi-copy" [text]="true" size="small" (onClick)="copiar(d.androidId, 'Android ID')" pTooltip="Copiar Android ID" />
+              }
+              <i
+                class="pi pi-info-circle"
+                aria-hidden="true"
+                pTooltip="El Android ID puede cambiar si el equipo se formatea; el serial es el identificador estable del equipo físico."
+              ></i>
+            </p>
+          </div>
           <div class="badges">
             <p-tag [value]="d.online ? 'Online' : 'Offline'" [severity]="d.online ? 'success' : 'secondary'" />
             <p-tag
@@ -19,8 +37,30 @@
 
         <dl class="detail-fields">
           <div>
+            <dt>Serial</dt>
+            <dd class="mono">
+              {{ d.serial || '—' }}
+              @if (esCopiable(d.serial)) {
+                <p-button icon="pi pi-copy" [text]="true" size="small" (onClick)="copiar(d.serial, 'Serial')" pTooltip="Copiar serial" />
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Android ID</dt>
+            <dd class="mono field-secondary">
+              {{ d.androidId }}
+              @if (esCopiable(d.androidId)) {
+                <p-button icon="pi pi-copy" [text]="true" size="small" (onClick)="copiar(d.androidId, 'Android ID')" pTooltip="Copiar Android ID" />
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Fabricante</dt>
+            <dd>{{ d.manufacturer || '—' }}</dd>
+          </div>
+          <div>
             <dt>Modelo</dt>
-            <dd>{{ d.model }} ({{ d.manufacturer }})</dd>
+            <dd>{{ d.model || '—' }}</dd>
           </div>
           <div>
             <dt>Android</dt>
