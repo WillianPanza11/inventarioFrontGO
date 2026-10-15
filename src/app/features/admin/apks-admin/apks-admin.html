@@ -18,6 +18,13 @@
     </div>
   </div>
 
+  <div class="provisioning-url">
+    <i class="pi pi-qrcode" aria-hidden="true"></i>
+    <span>URL estable de provisioning (para el QR):</span>
+    <span class="mono">{{ provisioningUrl }}</span>
+    <p-button icon="pi pi-copy" [text]="true" size="small" (onClick)="copiarProvisioningUrl()" pTooltip="Copiar URL" />
+  </div>
+
   <p-table [value]="apks()" [loading]="loading()" [paginator]="true" [rows]="10" dataKey="id" [rowHover]="true">
     <ng-template #header>
       <tr>
@@ -28,6 +35,7 @@
         <th>Origen</th>
         <th>Checksum</th>
         <th>Estado</th>
+        <th>Provisioning</th>
         <th></th>
       </tr>
     </ng-template>
@@ -69,6 +77,13 @@
             [severity]="apk.activo !== false ? 'success' : 'secondary'"
           />
         </td>
+        <td>
+          @if (apk.esProvisioning === true) {
+            <p-tag value="Provisioning" severity="success" icon="pi pi-qrcode" />
+          } @else {
+            <span class="empty-state">—</span>
+          }
+        </td>
         <td class="row-actions">
           <a
             [href]="apk.urlDescarga"
@@ -79,6 +94,19 @@
           >
             <i class="pi pi-external-link" aria-hidden="true"></i>
           </a>
+          <p-button
+            icon="pi pi-qrcode"
+            [text]="true"
+            [disabled]="apk.esProvisioning === true || apk.origen !== 'INTERNO'"
+            (onClick)="marcarProvisioning(apk)"
+            [pTooltip]="
+              apk.esProvisioning === true
+                ? 'Ya es el APK de provisioning'
+                : apk.origen !== 'INTERNO'
+                  ? 'Solo un APK interno puede marcarse como provisioning'
+                  : 'Marcar como provisioning'
+            "
+          />
           <p-button icon="pi pi-pencil" [text]="true" (onClick)="editar(apk)" />
           <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="eliminar(apk)" />
         </td>
@@ -87,7 +115,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="8">No hay APKs registrados.</td>
+        <td colspan="9">No hay APKs registrados.</td>
       </tr>
     </ng-template>
   </p-table>

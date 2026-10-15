@@ -56,6 +56,8 @@ export class ApksAdmin implements OnInit {
     nombre: [''],
   });
 
+  protected readonly provisioningUrl = `${this.basePath}/api/apks/provisioning/download`;
+
   protected readonly externalDialogVisible = signal(false);
   protected readonly saving = signal(false);
   protected readonly editingId = signal<unknown>(null);
@@ -240,6 +242,32 @@ export class ApksAdmin implements OnInit {
     });
   }
 
+  protected marcarProvisioning(apk: ApkResponseDTO): void {
+    this.confirmationService.confirm({
+      header: 'Confirmar APK de provisioning',
+      message: `"${apk.nombre}" pasará a ser el APK que se instala vía QR de provisioning. ¿Continuar?`,
+      icon: 'pi pi-qrcode',
+      accept: () => {
+        this.apksService.marcarProvisioning(apk.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Provisioning actualizado',
+              detail: `"${apk.nombre}" es ahora el APK de provisioning.`,
+            });
+            this.load();
+          },
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo marcar el APK de provisioning.',
+            }),
+        });
+      },
+    });
+  }
+
   protected copiarChecksum(checksum: unknown): void {
     const text = String(checksum ?? '');
     if (!text) {
@@ -247,6 +275,16 @@ export class ApksAdmin implements OnInit {
     }
     navigator.clipboard.writeText(text).then(() => {
       this.messageService.add({ severity: 'success', summary: 'Copiado', detail: 'Checksum copiado al portapapeles.' });
+    });
+  }
+
+  protected copiarProvisioningUrl(): void {
+    navigator.clipboard.writeText(this.provisioningUrl).then(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Copiado',
+        detail: 'URL de provisioning copiada al portapapeles.',
+      });
     });
   }
 
